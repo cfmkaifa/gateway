@@ -6,11 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@EnableFeignClients
 @EnableZuulProxy
 public class ForbesApplication {
+	
+	private final static String PROFILES_CODE = "spring.profiles.active";
+
+	
 	/***启动类
 	 * main方法慨述:
 	 * @param args void
@@ -20,6 +26,7 @@ public class ForbesApplication {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	 public static void main(String[] args) {
+		    System.setProperty(PROFILES_CODE, "dev");
 	    	SpringApplication.run(ForbesApplication.class, args);
 	    }
 	 

@@ -20,6 +20,7 @@
        <mybatis-plus.version>3.0.6</mybatis-plus.version>
        <druid.version>1.1.21</druid.version>     
        <jwt.version>0.9.1</jwt.version>
+       <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
        <commons.version>2.6</commons.version>
   </properties>
   <dependencies>
@@ -50,12 +51,31 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
-	   <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
 		</dependency>
 		<!-- commons -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-pool2</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -66,37 +86,11 @@
 			<artifactId>commons-lang</artifactId>
 			<version>${commons.version}</version>
 		</dependency>
-		<!-- freemarker -->
-		<dependency>    
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-freemarker</artifactId>
-		</dependency>
-		<!--spring-cloud-->
-		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-		    <artifactId>spring-cloud-starter-eureka-server</artifactId>
-		    <version>1.4.7.RELEASE</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-		    <artifactId>spring-cloud-starter-eureka</artifactId>
-		    <version>1.4.7.RELEASE</version>
-		</dependency>
-		<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zuul</artifactId>
-            <version>1.4.7.RELEASE</version>
-        </dependency>
-		<dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-         	<version>2.1.3.RELEASE</version>
-        </dependency>
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-		</dependency>
+		</dependency>	
 		<!-- json -->
 		<dependency>
          	<groupId>com.alibaba</groupId>
@@ -107,34 +101,19 @@
         <dependency>
 			   <groupId>io.github.openfeign</groupId>
 			   <artifactId>feign-core</artifactId>
-			   <version>9.5.0</version>
 			</dependency>
 			<dependency>
 			   <groupId>io.github.openfeign</groupId>
 			   <artifactId>feign-slf4j</artifactId>
-			   <version>9.5.0</version>
 			</dependency>
 			<dependency>
 			   <groupId>io.github.openfeign</groupId>
 			   <artifactId>feign-hystrix</artifactId>
-			   <version>9.5.0</version>
 			</dependency>
 			<dependency>
 			   <groupId>io.github.openfeign</groupId>
 			   <artifactId>feign-jackson</artifactId>
-			   <version>9.5.0</version>
 			</dependency>
-		<!--mysql-->
-		<dependency>
-		   <groupId>mysql</groupId>
-		   <artifactId>mysql-connector-java</artifactId>
-		   <scope>runtime</scope>
-		</dependency>
-		 <!-- Quartz定时任务 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
 		<!--JWT-->
 		<dependency>
 			<groupId>com.auth0</groupId>
@@ -146,17 +125,6 @@
 		    <groupId>org.apache.shiro</groupId>
 		    <artifactId>shiro-spring-boot-starter</artifactId>
 		    <version>1.4.0-RC2</version>
-		</dependency>
-		<!-- Swagger API文档 -->
-        <dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.9.2</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.github.caspar-chen</groupId>
-		    <artifactId>swagger-ui-layer</artifactId>
-		    <version>1.1.3</version>
 		</dependency>
         <dependency>
 		    <groupId>com.fasterxml.jackson.module</groupId>
@@ -175,24 +143,125 @@
 		<dependency>
 		    <groupId>io.github.openfeign</groupId>
 		    <artifactId>feign-jackson</artifactId>
-		    <version>9.5.1</version>
 		</dependency>
   </dependencies>
-  <build>
-	<plugins>
-	  	<!--使单元测试不影响项目的编译 -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-                <skip>true</skip><!--跳过单元测试 -->
-            </configuration>
-        </plugin>
-	</plugins>
-  </build>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+  	</dependencies>     
+  </dependencyManagement>
   <modules>
   	<module>zuul-config</module>
-  	
   	<module>zull-comm</module>
   </modules>
+  <build>
+	   <!--模块间相互依赖打包失败，在父级模块执行打包-->
+	  	<plugins>
+			  	<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<configuration>
+						<mainClass>org.chase.ChaseApplication</mainClass>
+					</configuration>
+					<dependencies>
+						<dependency>
+				         	<groupId>com.chase</groupId>
+				         	<artifactId>chase-base</artifactId>
+				         	<version>0.0.1-SNAPSHOT</version>
+				         	<scope>system</scope>
+				         	<systemPath>C:/Software/maven/repository/com/chase/chase-base/0.0.1-SNAPSHOT/chase-base-0.0.1-SNAPSHOT.jar</systemPath>
+				         </dependency>
+					</dependencies>
+				</plugin>
+				<!-- 指定JDK编译版本 -->
+	           <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-compiler-plugin</artifactId>
+	               <configuration>
+	                   <source>1.8</source>
+	                   <target>1.8</target>
+	                   <encoding>UTF-8</encoding>
+	               </configuration>
+	           </plugin>
+	           <!-- 打包跳过测试 -->
+	           <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <configuration>
+		          <skipTests>true</skipTests>
+		        </configuration>
+	        </plugin>
+		  	<plugin>
+				<groupId>org.mybatis.generator</groupId>
+				<artifactId>mybatis-generator-maven-plugin</artifactId>
+				<version>1.3.2</version>
+				<configuration>				      
+			            <configurationFile>
+			                <!-- 该路径就是我们创建generatorConfig.xml文件的全路径，千万别配错了 -->
+			                src/main/resources/generator/generatorConfig.xml
+			            </configurationFile>
+				    <verbose>true</verbose>
+				    <overwrite>true</overwrite>
+			        </configuration>
+					<dependencies>
+			         <dependency>
+				        <groupId>org.mybatis.generator</groupId>
+				        <artifactId>mybatis-generator-core</artifactId>
+			                <version>1.3.2</version>
+			         </dependency>
+			         <!--指定基类问题-->
+			         <dependency>
+			         	<groupId>com.chase</groupId>
+			         	<artifactId>chase-base</artifactId>
+			         	<version>0.0.1-SNAPSHOT</version>
+			         	<scope>system</scope>
+			         	<systemPath>C:/Software/maven/repository/com/chase/chase-base/0.0.1-SNAPSHOT/chase-base-0.0.1-SNAPSHOT.jar</systemPath>
+			         </dependency>
+			         <dependency>
+				        <groupId>com.chrm</groupId>
+				        <artifactId>mybatis-generator-lombok-plugin</artifactId>
+			            <version>1.0-SNAPSHOT</version>
+			            <scope>system</scope>
+			            <systemPath>C:/Software/maven/repository/other/mybatis-generator-lombok-plugin-1.0-SNAPSHOT.jar</systemPath>
+			         </dependency>
+			       </dependencies>
+		     </plugin>
+	  </plugins>
+  </build>
+  <repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 </project>
