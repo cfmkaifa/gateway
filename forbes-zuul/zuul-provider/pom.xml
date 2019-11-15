@@ -8,15 +8,15 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>org.forbes</groupId>
-  <artifactId>zuul-config</artifactId>
+  <artifactId>zuul-provider</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>zuul-config</name>
+  <name>zuul-provider</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-  	<dependency>
+    <dependency>
       <groupId>org.forbes</groupId>
       <artifactId>zull-comm</artifactId>
       <version>0.0.1-SNAPSHOT</version>
@@ -24,6 +24,11 @@
     <dependency>
       <groupId>org.forbes</groupId>
       <artifactId>zuul-biz</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.forbes</groupId>
+      <artifactId>zuul-config</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

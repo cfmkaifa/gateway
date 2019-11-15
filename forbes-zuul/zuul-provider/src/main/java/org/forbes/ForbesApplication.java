@@ -1,4 +1,4 @@
-package com.forbes;
+package org.forbes;
 
 import javax.servlet.MultipartConfigElement;
 

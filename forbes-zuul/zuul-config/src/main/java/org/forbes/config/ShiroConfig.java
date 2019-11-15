@@ -19,15 +19,13 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-/**
- * @author: Scott
- * @date: 2018/2/7
- * @description: shiro 配置类
+import org.springframework.core.Ordered;
+/***
+ * ShiroConfig概要说明：shiro 配置类
+ * @author Huanghy
  */
-
 @Configuration
-public class ShiroConfig {
+public class ShiroConfig implements Ordered {
 	
 	/**
 	 * Filter Chain定义说明 
@@ -46,17 +44,6 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/sys/login", "anon"); //登录接口排除
 		filterChainDefinitionMap.put("/sys/common/preview", "anon"); //检验接口排除
 		filterChainDefinitionMap.put("/sys/common/download", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/article/query-by-id", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/msg/index", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/msg/verify-js", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/micro/check-login", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/business-member/list", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/apply/add", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/business-member/add", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/business-member/user-apply-send-msg", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/business-member/phone-call-send-msg", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/article/list", "anon"); //检验接口排除
-		filterChainDefinitionMap.put("/little-people/business-member/query-by-id-share", "anon"); //检验接口排除
 		filterChainDefinitionMap.put("/auth/2step-code", "anon");//登录验证码
 		filterChainDefinitionMap.put("/**/exportXls", "anon"); //导出接口
 		filterChainDefinitionMap.put("/**/importExcel", "anon"); //导入接口
@@ -90,15 +77,19 @@ public class ShiroConfig {
 		return shiroFilterFactoryBean;
 	}
 
+	/***
+	 * securityManager方法慨述:
+	 * @param extRealm
+	 * @return DefaultWebSecurityManager
+	 * @创建人 huanghy
+	 * @创建时间 2019年11月15日 下午9:22:23
+	 * @修改人 (修改了该文件，请填上修改人的名字)
+	 * @修改日期 (请填上修改该文件时的日期)
+	 */
 	@Bean("securityManager")
-	public DefaultWebSecurityManager securityManager(ExtRealm myRealm) {
+	public DefaultWebSecurityManager securityManager(ExtRealm extRealm) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		securityManager.setRealm(myRealm);
-		/*
-		 * 关闭shiro自带的session，详情见文档
-		 * http://shiro.apache.org/session-management.html#SessionManagement-
-		 * StatelessApplications%28Sessionless%29
-		 */
+		securityManager.setRealm(extRealm);
 		DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
 		DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
 		defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
@@ -129,6 +120,11 @@ public class ShiroConfig {
 		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
 		advisor.setSecurityManager(securityManager);
 		return advisor;
+	}
+
+	@Override
+	public int getOrder() {
+		return 0;
 	}
 
 }

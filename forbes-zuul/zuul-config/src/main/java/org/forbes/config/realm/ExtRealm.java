@@ -13,12 +13,16 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.forbes.biz.ISysUserService;
 import org.forbes.comm.constant.CommonConstant;
+import org.forbes.comm.model.SysPermission;
+import org.forbes.comm.model.SysUser;
 import org.forbes.comm.utils.ConvertUtils;
 import org.forbes.comm.utils.JwtUtil;
 import org.forbes.config.RedisUtil;
 import org.forbes.config.token.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -27,10 +31,9 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
+@Order(value=Integer.MIN_VALUE)
 public class ExtRealm extends AuthorizingRealm {
 
-	@Autowired
-	private ISysPermissionService sysPermissionService;
 	@Autowired
 	private ISysUserService sysUserService;
     @Autowired
@@ -51,6 +54,12 @@ public class ExtRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		SysUser sysUser = null;
+		String username = null;
+		if(principals!=null) {
+			sysUser =  (SysUser) principals.getPrimaryPrincipal();
+			username = sysUser.getUsername();
+		}
 		/***--end***/
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		// 设置该用户拥有角色
@@ -61,7 +70,7 @@ public class ExtRealm extends AuthorizingRealm {
         	roles = JSON.parseArray(rolesStr.toString(), String.class);
         } else {
             //从数据库查询权限放到redis中
-            //roles = sysUserService.getRole(username);
+            roles = sysUserService.getRole(username);
             stringRedisTemplate.opsForValue().set(CommonConstant.PREFIX_USER_ROLE + username, JSON.toJSONString(roles));
         }
         //设置超时时间（1小时）
@@ -72,15 +81,10 @@ public class ExtRealm extends AuthorizingRealm {
 		info.setRoles(new HashSet<>(roles));
 		// 从数据库获取所有的权限
 		Set<String> permissionSet = new HashSet<>();
-		List<SysPermission> permissionList = sysPermissionService.queryByUser(username);
+		List<SysPermission> permissionList = sysUserService.queryByUser(username);
 		for (SysPermission po : permissionList) {
-			if (ConvertUtils.isNotEmpty(po.getRedirect()) 
-					|| ConvertUtils.isNotEmpty(po.getPerms())) {
-				if (ConvertUtils.isNotEmpty(po.getRedirect())) {
-					permissionSet.add(po.getRedirect());
-				} else if (ConvertUtils.isNotEmpty(po.getPerms())) {
-					permissionSet.add(po.getPerms());
-				}
+			if (ConvertUtils.isNotEmpty(po.getPerms())) {
+				permissionSet.add(po.getPerms());
 			}
 		}
 		info.addStringPermissions(permissionSet);
@@ -115,7 +119,7 @@ public class ExtRealm extends AuthorizingRealm {
 			throw new AuthenticationException("用户名或密码错误!");
 		}
 		// 判断用户状态
-		if (sysUser.getStatus() != 1) {
+		if (!"1".equalsIgnoreCase(sysUser.getStatus())) {
 			throw new AuthenticationException("账号已被锁定,请联系管理员!");
 		}
 		return new SimpleAuthenticationInfo(sysUser, token, getName());

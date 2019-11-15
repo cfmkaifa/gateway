@@ -23,6 +23,11 @@ public interface CommonConstant {
     public  static final  Integer SC_INTERNAL_SERVER_ERROR_500 = 500;
     /** {@code 200 OK} (HTTP/1.0 - RFC 1945) */
     public  static final  Integer SC_OK_200 = 200;
+    public static String PREFIX_USER_ROLE = "PREFIX_USER_ROLE";
+    public static String PREFIX_USER_PERMISSION  = "PREFIX_USER_PERMISSION ";
+    public static int  TOKEN_EXPIRE_TIME  = 3600; //3600秒即是一小时
+    
+    public static String PREFIX_USER_TOKEN  = "PREFIX_USER_TOKEN";
     /****/
     /****默认空值
      */

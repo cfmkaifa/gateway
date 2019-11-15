@@ -1,4 +1,4 @@
-package com.forbes.forbes_zuul;
+package org.forbes;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
