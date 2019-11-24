@@ -6,6 +6,7 @@
     <groupId>org.forbes</groupId>
     <artifactId>forbes-zuul</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>org.forbes</groupId>
   <artifactId>zull-comm</artifactId>
@@ -16,10 +17,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
+  <build>
+  </build>
 </project>

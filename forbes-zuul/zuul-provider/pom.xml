@@ -32,4 +32,38 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <build>
+  	<plugins>
+  		<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>org.forbes.ForbesApplication</mainClass>
+			   </configuration>
+				<dependencies>
+					<dependency>
+			         	<groupId>org.forbes</groupId>
+			         	<artifactId>zull-comm</artifactId>
+			         	<version>0.0.1-SNAPSHOT</version>
+			         	<scope>system</scope>
+			         	<systemPath>${parentPath}zull-comm/target/zull-comm-0.0.1-SNAPSHOT.jar</systemPath>
+			         </dependency>
+			         <dependency>
+			         	<groupId>org.forbes</groupId>
+			         	<artifactId>zuul-biz</artifactId>
+			         	<version>0.0.1-SNAPSHOT</version>
+			         	<scope>system</scope>
+			         	<systemPath>${parentPath}zuul-biz/target/zuul-biz-0.0.1-SNAPSHOT.jar</systemPath>
+			         </dependency>
+			         <dependency>
+			         	<groupId>org.forbes</groupId>
+			         	<artifactId>zuul-config</artifactId>
+			         	<version>0.0.1-SNAPSHOT</version>
+			         	<scope>system</scope>
+			         	<systemPath>${parentPath}zuul-config/target/zuul-config-0.0.1-SNAPSHOT.jar</systemPath>
+			         </dependency>
+				</dependencies>
+			</plugin>
+  	</plugins>
+  </build>
 </project>
