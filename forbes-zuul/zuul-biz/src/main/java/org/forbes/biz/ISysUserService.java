@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.forbes.comm.model.SysPermission;
 import org.forbes.comm.model.SysUser;
+import org.forbes.comm.vo.Result;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ public interface ISysUserService {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	@RequestMapping(value="/user/user-by-name",method=RequestMethod.GET)
-	SysUser getUserByName(@RequestParam(name="username",required=true)String username);
+	Result<SysUser> getUserByName(@RequestParam(name="username",required=true)String username);
 	
 	
 	
@@ -43,7 +44,7 @@ public interface ISysUserService {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	@RequestMapping(value="/user/role-by-name",method=RequestMethod.GET)
-	List<String>  getRole(@RequestParam(name="username",required=true)String username);
+	Result<List<String>>  getRole(@RequestParam(name="username",required=true)String username);
 	
 	
 	
@@ -57,5 +58,5 @@ public interface ISysUserService {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	@RequestMapping(value="/user/permission-by-name",method=RequestMethod.GET)
-	List<SysPermission> queryByUser(@RequestParam(name="username",required=true)String username);
+	Result<List<SysPermission>> queryByUser(@RequestParam(name="username",required=true)String username);
 }

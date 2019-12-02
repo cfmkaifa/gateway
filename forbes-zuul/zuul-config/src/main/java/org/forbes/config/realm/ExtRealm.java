@@ -19,6 +19,7 @@ import org.forbes.comm.model.SysPermission;
 import org.forbes.comm.model.SysUser;
 import org.forbes.comm.utils.ConvertUtils;
 import org.forbes.comm.utils.JwtUtil;
+import org.forbes.comm.vo.Result;
 import org.forbes.config.RedisUtil;
 import org.forbes.config.token.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,8 @@ public class ExtRealm extends AuthorizingRealm {
         	roles = JSON.parseArray(rolesStr.toString(), String.class);
         } else {
             //从数据库查询权限放到redis中
-            roles = sysUserService.getRole(username);
+        	Result<List<String>>  resultRole = sysUserService.getRole(username);
+        	roles = resultRole.getResult();
             stringRedisTemplate.opsForValue().set(CommonConstant.PREFIX_USER_ROLE + username, JSON.toJSONString(roles));
         }
         //设置超时时间（1小时）
@@ -81,7 +83,8 @@ public class ExtRealm extends AuthorizingRealm {
 		info.setRoles(new HashSet<>(roles));
 		// 从数据库获取所有的权限
 		Set<String> permissionSet = new HashSet<>();
-		List<SysPermission> permissionList = sysUserService.queryByUser(username);
+		Result<List<SysPermission>> resultPermission = sysUserService.queryByUser(username);
+		List<SysPermission> permissionList = resultPermission.getResult();
 		for (SysPermission po : permissionList) {
 			if (ConvertUtils.isNotEmpty(po.getPerms())) {
 				permissionSet.add(po.getPerms());
@@ -110,7 +113,8 @@ public class ExtRealm extends AuthorizingRealm {
 			throw new AuthenticationException("token非法无效!");
 		}
 		// 查询用户信息
-		SysUser sysUser = sysUserService.getUserByName(username);
+		Result<SysUser> resultSysUser = sysUserService.getUserByName(username);
+		SysUser sysUser = resultSysUser.getResult();
 		if (sysUser == null) {
 			throw new AuthenticationException("用户不存在!");
 		}
@@ -142,18 +146,19 @@ public class ExtRealm extends AuthorizingRealm {
 	 * @return
 	 */
 	public boolean jwtTokenRefresh(String token, String userName, String passWord) {
-		String cacheToken = String.valueOf(redisUtil.get(CommonConstant.PREFIX_USER_TOKEN + token));
+		String key = CommonConstant.PREFIX_USER_TOKEN + token;
+		String cacheToken = String.valueOf(redisUtil.get(key));
 		if (ConvertUtils.isNotEmpty(cacheToken)) {
 			//校验token有效性
 			if (!JwtUtil.verify(token, userName, passWord)) {
 				String newAuthorization = JwtUtil.sign(userName, passWord);
-				redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, newAuthorization);
+				redisUtil.set(key, newAuthorization);
 				 //设置超时时间
-				redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME/1000);
+				redisUtil.expire(key, JwtUtil.EXPIRE_TIME/1000);
 			} else {
-				redisUtil.set(CommonConstant.PREFIX_USER_TOKEN + token, cacheToken);
+				redisUtil.set(key, cacheToken);
 				 //设置超时时间
-				redisUtil.expire(CommonConstant.PREFIX_USER_TOKEN + token, JwtUtil.EXPIRE_TIME/1000);
+				redisUtil.expire(key, JwtUtil.EXPIRE_TIME/1000);
 			}
 			return true;
 		}
