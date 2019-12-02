@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author Huanghy
  */
 @ConditionalOnProperty(name="spring.application.usercenter")
-@FeignClient(name="${spring.application.usercenter}",url="${spring.application.usercenter.url}")
+@FeignClient(name="${spring.application.usercenter}")
 public interface ISysUserService {
 
 	
