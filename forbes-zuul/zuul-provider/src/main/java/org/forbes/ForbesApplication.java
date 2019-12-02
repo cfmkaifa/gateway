@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 @EnableFeignClients
 @EnableZuulProxy
 public class ForbesApplication {
-	
-	private final static String PROFILES_CODE = "spring.profiles.active";
 
 	
 	/***启动类
@@ -26,7 +24,6 @@ public class ForbesApplication {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	 public static void main(String[] args) {
-		    System.setProperty(PROFILES_CODE, "dev");
 	    	SpringApplication.run(ForbesApplication.class, args);
 	    }
 	 
