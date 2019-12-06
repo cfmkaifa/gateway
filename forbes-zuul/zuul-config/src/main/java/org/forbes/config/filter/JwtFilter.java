@@ -7,10 +7,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.forbes.comm.constant.CommonConstant;
 import org.forbes.comm.exception.ForbesException;
+import org.forbes.comm.model.SysUser;
+import org.forbes.comm.utils.ConvertUtils;
+import org.forbes.comm.utils.JwtUtil;
 import org.forbes.comm.vo.Result;
 import org.forbes.config.token.JwtToken;
 import org.springframework.http.HttpStatus;
@@ -35,6 +41,19 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
 			try {
+				 HttpServletRequest httpRequest = WebUtils.toHttp(request);
+				 String token = httpRequest.getHeader(CommonConstant.X_ACCESS_TOKEN);
+				 if(ConvertUtils.isNotEmpty(token)){
+					 Subject subject = SecurityUtils.getSubject();
+					 String username = JwtUtil.getUsername(token);
+					 if(ConvertUtils.isNotEmpty(subject)){
+						 SysUser sysUser = (SysUser)subject.getPrincipal();
+						 /***不相同退出登录**/
+						 if(!username.equalsIgnoreCase(sysUser.getUsername())){
+							 subject.logout();
+						 }
+					 }
+				 }
 				executeLogin(request, response);
 //				String url = getPathWithinApplication(request);
 //				boolean isPermitted =  SecurityUtils.getSubject().isPermitted(url);

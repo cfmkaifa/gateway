@@ -23,6 +23,7 @@ public class Result<T> implements Serializable {
 	 * 返回处理消息
 	 */
 	private String message = "操作成功！";
+	public static final  String LOGOUT_SUCCESS_MSG = "退出登录成功！";
 	
 	/**
 	 * 返回代码
