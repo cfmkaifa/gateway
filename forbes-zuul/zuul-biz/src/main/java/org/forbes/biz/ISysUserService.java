@@ -58,5 +58,5 @@ public interface ISysUserService {
 	 * @修改日期 (请填上修改该文件时的日期)
 	 */
 	@RequestMapping(value="/user/permission-by-name",method=RequestMethod.GET)
-	Result<List<SysPermission>> queryByUser(@RequestParam(name="username",required=true)String username);
+	Result<List<SysPermission>> permissionByName(@RequestParam(name="username",required=true)String username);
 }

@@ -46,7 +46,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 				 if(ConvertUtils.isNotEmpty(token)){
 					 Subject subject = SecurityUtils.getSubject();
 					 String username = JwtUtil.getUsername(token);
-					 if(ConvertUtils.isNotEmpty(subject)){
+					 if(ConvertUtils.isNotEmpty(subject.getPrincipal())){
 						 SysUser sysUser = (SysUser)subject.getPrincipal();
 						 /***不相同退出登录**/
 						 if(!username.equalsIgnoreCase(sysUser.getUsername())){
@@ -62,6 +62,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 //				}
 				return true;
 			} catch (Exception e) {
+				e.printStackTrace();
 				if(e instanceof ForbesException){
 					throw new AuthenticationException(e.getMessage());
 				} else {
@@ -105,6 +106,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 			}
 			return super.preHandle(request, response);
 		}catch(Exception e){
+			e.printStackTrace();
 			log.error(e.getMessage());
 			Result<?> result = new Result<>();
 			if(e instanceof AuthenticationException){

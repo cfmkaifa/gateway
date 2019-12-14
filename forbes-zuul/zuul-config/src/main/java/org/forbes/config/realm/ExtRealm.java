@@ -83,7 +83,7 @@ public class ExtRealm extends AuthorizingRealm {
 		info.setRoles(new HashSet<>(roles));
 		// 从数据库获取所有的权限
 		Set<String> permissionSet = new HashSet<>();
-		Result<List<SysPermission>> resultPermission = sysUserService.queryByUser(username);
+		Result<List<SysPermission>> resultPermission = sysUserService.permissionByName(username);
 		List<SysPermission> permissionList = resultPermission.getResult();
 		for (SysPermission po : permissionList) {
 			if (ConvertUtils.isNotEmpty(po.getPerms())) {
