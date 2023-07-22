@@ -21,7 +21,7 @@
        <druid.version>1.1.21</druid.version>     
        <jwt.version>0.9.1</jwt.version>
        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-       <commons.version>2.6</commons.version>
+       <commons.version>2.7</commons.version>
        <parentPath>C:/workspace/forbes-zuul/forbes-zuul/</parentPath>
   </properties>
   <dependencies>
